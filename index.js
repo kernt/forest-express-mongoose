@@ -18,18 +18,55 @@ exports.init = function(opts) {
     opts.connections = [opts.mongoose];
   }
 
-  exports.getLianaName = function () {
+  exports.getLianaName = function getLianaName() {
     return 'forest-express-mongoose';
   };
 
-  exports.getLianaVersion = function () {
+  exports.getLianaVersion = function getLianaVersion() {
     var lianaVersion = require('./package.json').version.match(REGEX_VERSION);
     if (lianaVersion && lianaVersion[0]) {
       return lianaVersion[0];
     }
   };
 
-  exports.getOrmVersion = function () {
+  exports.getFrameworkName = function getFrameworkName() {
+    if (!opts.framework) { return null; }
+    return opts.framework.name || null;
+  };
+
+  exports.getFrameworkVersion = function getFrameworkVersion() {
+    if (!opts.framework) { return null; }
+
+    try {
+      var frameworkVersion = opts.framework.version.match(REGEX_VERSION);
+      if (frameworkVersion && frameworkVersion[0]) {
+        return frameworkVersion[0];
+      }
+    } catch (error) {
+      return null;
+    }
+  };
+
+  exports.getDatabaseType = function getDatabaseType() {
+    return 'MongoDB';
+  };
+
+  exports.getDatabaseVersion = function getDatabaseVersion() {
+    if (!opts.mongoose) { return null; }
+
+    opts.mongoose.db.command({ buildInfo: 1 }, function (error, info) {
+      if (error || !info) {
+        return null;
+      }
+      return info.version || null;
+    });
+  };
+
+  exports.getOrmName = function getOrmName() {
+    return 'mongoose';
+  };
+
+  exports.getOrmVersion = function getOrmVersion() {
     if (!opts.mongoose) { return null; }
 
     try {
@@ -40,10 +77,6 @@ exports.init = function(opts) {
     } catch (error) {
       return null;
     }
-  };
-
-  exports.getDatabaseType = function () {
-    return 'MongoDB';
   };
 
   exports.SchemaAdapter = require('./adapters/mongoose');
