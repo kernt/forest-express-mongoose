@@ -29,24 +29,6 @@ exports.init = function(opts) {
     }
   };
 
-  exports.getFrameworkName = function getFrameworkName() {
-    if (!opts.framework) { return null; }
-    return opts.framework.name || null;
-  };
-
-  exports.getFrameworkVersion = function getFrameworkVersion() {
-    if (!opts.framework) { return null; }
-
-    try {
-      var frameworkVersion = opts.framework.version.match(REGEX_VERSION);
-      if (frameworkVersion && frameworkVersion[0]) {
-        return frameworkVersion[0];
-      }
-    } catch (error) {
-      return null;
-    }
-  };
-
   exports.getDatabaseType = function getDatabaseType() {
     return 'MongoDB';
   };
